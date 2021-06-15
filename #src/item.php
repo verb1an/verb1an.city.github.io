@@ -45,7 +45,7 @@ if($_SESSION['user']) {
                                         <textarea name="item_text" class="input-text" placeholder="Краткое писание проблемы"></textarea>
                                     </div>
                                     <div class="inp file">
-                                        <input type="file" name="" onclick="itemUpload(this)" multiple>
+                                        <input type="file" id="additemimg" name="" multiple>
                                         <span>Максимум 10 фото</span>
                                     </div>
                                     <div class="imgpreviews">
@@ -68,10 +68,6 @@ if($_SESSION['user']) {
                                         <input type="text" name="" list="data--cat2" class="input-text input--cat" placeholder="Категории">
                                         <datalist id="data--cat2" >
                                             <?php  
-                                                include('server/connection.php');
-                                                $sth = $connect->prepare("SELECT * FROM sys_catygories");
-                                                $sth->execute();
-                                                $result = $sth->fetchAll();
                                                 foreach($result as $key) :
                                             ?>
                                             <option value="<?php echo $key['name']; ?>" data--cat-id="<?php echo $key['id']; ?>"></option>
@@ -82,10 +78,6 @@ if($_SESSION['user']) {
                                         <input type="text" name="" list="data--cat3" class="input-text input--cat" placeholder="Категории">
                                         <datalist id="data--cat3" >
                                             <?php  
-                                                include('server/connection.php');
-                                                $sth = $connect->prepare("SELECT * FROM sys_catygories");
-                                                $sth->execute();
-                                                $result = $sth->fetchAll();
                                                 foreach($result as $key) :
                                             ?>
                                             <option value="<?php echo $key['name']; ?>" data--cat-id="<?php echo $key['id']; ?>"></option>
@@ -96,10 +88,6 @@ if($_SESSION['user']) {
                                         <input type="text" name="" list="data--cat4" class="input-text input--cat" placeholder="Категории">
                                         <datalist id="data--cat4" >
                                             <?php  
-                                                include('server/connection.php');
-                                                $sth = $connect->prepare("SELECT * FROM sys_catygories");
-                                                $sth->execute();
-                                                $result = $sth->fetchAll();
                                                 foreach($result as $key) :
                                             ?>
                                             <option value="<?php echo $key['name']; ?>" data--cat-id="<?php echo $key['id']; ?>"></option>
@@ -139,3 +127,4 @@ if($_SESSION['user']) {
 </body>
 
 </html>
+
