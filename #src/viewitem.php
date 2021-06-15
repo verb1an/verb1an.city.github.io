@@ -33,7 +33,7 @@ if($_GET['id']) {
     <title>City Problems</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/ea2635cacf.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css/main.min.css">
+    <link rel="stylesheet" href="css/main.css">
     <script src="js/index.js"></script>
 </head>
 
@@ -107,7 +107,7 @@ if($_GET['id']) {
                                     <?php if($user_info['rights'] == 'super') : ?>
                                     <a class="link btn--changeStatus">Статус:
                                         <div class="checkbox">
-                                            <input type="checkbox" name="" <?php if($item_src['status'] == 'true') { echo 'checked="checked"'; } ?> id="changestatus">
+                                            <input type="checkbox" name="" <?php if($item_src['status'] == 'true') { echo 'checked="checked"'; } ?> id="changestatus" onclick="editStatus(this)">
                                             <label for="changestatus"></label>
                                         </div>
                                     </a>
