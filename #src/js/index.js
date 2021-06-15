@@ -243,6 +243,7 @@ function uploadFile(input) {
 }
 
 function itemUpload(itemsimagesinput) {
+    let inputfile = document.querySelector('.inp.file input');
     let preview = document.querySelector(".imgpreviews");
     itemsimagesinput.addEventListener("change", function () {
         if (
@@ -254,7 +255,10 @@ function itemUpload(itemsimagesinput) {
                     let fd = new FormData();
                     fd.append("img", $(itemsimagesinput).prop("files")[i]);
                     upload(fd);
+                    
                 }
+
+                console.log( itemsimagesinput.files.length )
             }
         }
     });
@@ -270,6 +274,7 @@ function itemUpload(itemsimagesinput) {
                 if (data !== "false") {
                     preview.innerHTML += `<div class="img"><img src="${data}" alt=""><a class="del"></a></div>`;
                     newLstnr();
+                    console.log( inputfile.value )
                 }
             },
         });
@@ -350,6 +355,7 @@ function addNewItem(form) {
             data: "editpost=" + JSON.stringify(item) + "&item=" + itemid ,
             type: "POST",
             success: function (data) {
+                console.log(data)
                 if (data == "true") {
                     message({
                         target: "message",
@@ -384,6 +390,14 @@ function clearInputs() {
 }
 
 function disItem() {
+    message({
+        target: 'message',
+        type:  'success',
+        text: 'Удалить заявку? Вышу заявку сможет восстановить только администратор<br><div class="buttons"><a class="btn btn--def confdel" onclick="del()">Удалить</a><a class="back" onclick="window.location.reload()">Отмена</a></div>'
+    });
+}
+
+function del() {
     let itemid = ( window.location.search.split('=')[1] );
     $.ajax({
         url: 'server/itemsrc.php',
@@ -400,6 +414,20 @@ function disItem() {
                 setTimeout(() => {
                     document.location.href = 'profile.php';
                 }, 1000)
+            }
+        }
+    })
+}
+
+function editStatus(item) {
+    let itemid = ( window.location.search.replace('?', '').split('=')[1] );
+    $.ajax({
+        url: 'server/itemsrc.php',
+        type: 'POST',
+        data: 'status=' + item.checked + '&itemid=' + itemid,
+        success: function(data) {
+            if(data == 'true') {
+                window.location.reload();
             }
         }
     })
@@ -510,6 +538,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let imageinput = document.querySelector("#edit--image");
     let menu_items = document.querySelectorAll('.nav .link');
+    let additemimg = document.querySelector('#additemimg');
+
+    if( additemimg ) {
+        itemUpload(additemimg);
+    }
     
     if (imageinput) {
         let preview = document.querySelector("#imgprev");
@@ -543,7 +576,5 @@ document.addEventListener("DOMContentLoaded", function () {
             })
         }
     });
-
-
 
 });
