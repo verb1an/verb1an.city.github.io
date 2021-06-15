@@ -33,9 +33,15 @@
                 <?php include('components/_menu.php'); ?>
 
                 <?php 
-                    $all=$connect->query("SELECT COUNT(*) as count FROM sys_items")->fetchColumn();
-                    $alltrue=$connect->query("SELECT COUNT(*) as count FROM sys_items WHERE `status` = 'true'")->fetchColumn();
-                    $allfalse=$connect->query("SELECT COUNT(*) as count FROM sys_items WHERE `status` = 'false'")->fetchColumn();
+                    $all=$connect->query("SELECT COUNT(*) as count FROM sys_items WHERE `status` != 'disabled'");
+                    $alltrue=$connect->query("SELECT COUNT(*) as count FROM sys_items WHERE `status` = 'true' AND `status` != 'disabled'");
+                    $allfalse=$connect->query("SELECT COUNT(*) as count FROM sys_items WHERE `status` = 'false' AND `status` != 'disabled'");
+
+                    if($all) {
+                        $all = $all->fetchColumn();
+                        $alltrue = $alltrue->fetchColumn();
+                        $allfalse = $allfalse->fetchColumn();
+                    }
                 ?>
 
                 <div class="center--col">
@@ -85,7 +91,7 @@
                     </section>
 
                     <?php 
-                        $sth = $connect->prepare("SELECT `id`, `images` FROM `sys_items` ORDER BY `date` DESC, `id` DESC LIMIT 4");
+                        $sth = $connect->prepare("SELECT `id`, `images` FROM `sys_items` WHERE `status` != 'disabled' ORDER BY `date` DESC, `id` DESC LIMIT 4");
                         $sth->execute();
                         $items_src = $sth->fetchAll();
                         $images = [];
