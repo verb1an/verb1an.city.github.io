@@ -69,3 +69,23 @@ if($_POST['disabledpost']) {
         echo 'true';
     }
 }
+
+if($_POST['status']) {
+    $query = $connect->prepare("SELECT `status` FROM `sys_items` WHERE `id` = $_POST[itemid]");
+    $query->execute();
+    $status = $query->fetch();
+
+    $query = $connect->prepare("UPDATE `sys_items` SET `status` = '$_POST[status]' WHERE `id` = $_POST[itemid]");
+    $query->execute();
+
+    $query = $connect->prepare("SELECT `status` FROM `sys_items` WHERE `id` = $_POST[itemid]");
+    $query->execute();
+    $newstatus = $query->fetch();
+
+    if($newstatus['status'] != $status['status']) {
+        echo 'true';
+    }else{
+        echo 'false';
+    }
+    
+}
