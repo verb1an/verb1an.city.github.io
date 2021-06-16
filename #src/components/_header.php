@@ -23,6 +23,12 @@
                     <a href="login.php" class="btn btn--toSingInPage">Войти</a>
                 <?php endif; ?>
             </div>
+
+            <div class="headers__modals">
+                <div class="modal siteblock" data--modal="notify">
+                    123
+                </div>
+            </div>
         </div>
     </div>
 </header>

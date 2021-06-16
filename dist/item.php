@@ -45,7 +45,7 @@ if($_SESSION['user']) {
                                         <textarea name="item_text" class="input-text" placeholder="Краткое писание проблемы"></textarea>
                                     </div>
                                     <div class="inp file">
-                                        <input type="file" name="" onclick="itemUpload(this)" multiple>
+                                        <input type="file" name="" id="additemimg" multiple>
                                         <span>Максимум 10 фото</span>
                                     </div>
                                     <div class="imgpreviews">

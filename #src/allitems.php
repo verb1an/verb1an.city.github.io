@@ -33,16 +33,21 @@ if ($_SESSION['user']) {
         $page = $_GET['page'];
     }
 
-    $sth = $connect->prepare("SELECT MAX(`id`) FROM `sys_items`");
-    $sth->execute();
-    $max = $sth->fetch();
-    echo ($max[0]+9)-$page*9;
+    $search = '';
+    if($_GET['search']) {
+        $search = "AND `name` LIKE " . "'%" . $_GET['search'] . "%'"; 
+    }else if($_GET['category']){
+        $search = "AND `cats` LIKE " . "'%" . $_GET['category'] . "%'";
+    }
     
-    $sth = $connect->prepare("SELECT * FROM sys_items WHERE `id` <= (($max[0]+9)-$page*9) AND `status` NOT IN ('disabled') ORDER BY `id` DESC LIMIT 9");
+    $query = "SELECT * FROM `sys_items` WHERE `status` != 'disabled' $search ORDER BY `id` DESC"; 
+    $connect->quote($query);
+    $sth = $connect->prepare($query);
     $sth->execute();
     $items_src = $sth->fetchAll();
 
-    $members=$connect->query("SELECT COUNT(*) as count FROM sys_items")->fetchColumn();
+    $max = 9;
+    
 ?>
 
 <main class="main">
@@ -56,40 +61,87 @@ if ($_SESSION['user']) {
                             <div class="additem siteblock" style="background: transparent; box-shadow: none; margin: 0;">
                                 <a href="item.php" class="btn btn--def" style="width: 100%; max-width: 100%;">Добавить новую заявку</a>
                             </div>
-                            <?php foreach($items_src as $key) : ?>
-                            <a href="viewitem.php?id=<?php echo $key['id'] ?>" class="item siteblock">
-                                <?php $img = explode(';', $key['images'])[0]; ?>
+                            <?php if(count($items_src) < 1) : ?>
+                                <section class="section" id="noresult">
+                                    <div class="section__inner">
+                                        <div class="noresult siteblock">
+                                            <div class="content">
+                                                <span class="i-search"></span>
+                                                <h4>Нету результатов</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            <?php endif; ?>
+                            <?php for($i = ($page-1)*$max; $i < $page*$max; $i++) : ?>
+                            <?php if($items_src[$i]) : ?>
+                            <a href="viewitem.php?id=<?php echo $items_src[$i]['id'] ?>" class="item siteblock">
+                                <?php $img = explode(';', $items_src[$i]['images'])[0]; ?>
                                 <div class="img"><img src="<?php echo $img; ?>" alt=""></div>
-                                <h3 class="id">Заявка №<?php echo $key['id']; ?>
-                                    <?php if($key['show_name']) : ?>
+                                <h3 class="id">Заявка №<?php echo $items_src[$i]['id']; ?>
+                                    <?php if($items_src[$i]['show_name']) : ?>
                                         <?php 
-                                            $un_sth = $connect->prepare("SELECT `u_name` FROM `sys_users` WHERE `id` = $key[user]");
+                                            $un_sth = $connect->prepare("SELECT `u_name` FROM `sys_users` WHERE `id` = $items_src[$i][user]");
                                             $un_sth->execute();
                                             $u_name = $un_sth->fetch()[0];
                                         ?>
                                         <span><?php echo $u_name; ?></span>
                                     <?php endif;?>
                                 </h3>
-                                <div class="name"><?php echo $key['name']; ?></div>
-                                <div class="date">На сайте с <?php echo $key['date']; ?></div>
-                                <span class="status" style="display: block;" data--status="<?php echo $key['status']; ?>">Выполнено</span>
+                                <div class="name"><?php echo $items_src[$i]['name']; ?></div>
+                                <div class="date">На сайте с <?php echo $items_src[$i]['date']; ?></div>
+                                <span class="status" style="display: block;" data--status="<?php echo $items_src[$i]['status']; ?>">Выполнено</span>
                             </a>
-                            <?php endforeach; ?>
+                            <?php endif; ?>
+                            <?php endfor; ?>
                         </div>
                     </div>
                 </div>
+                <?php if($_GET['category']) {
+                    $s = "&category=$_GET[category]";
+                }else if($_GET['search']) {
+                    $s = "&search=$_GET[search]";
+                } ?>
+                    
                 <section class="section" id="itemsnav">
                     <div class="section__inner">
                         <div class="itemsnav siteblock">
                             <?php if($page != 1) : ?>
-                            <a href="allitems.php?page=<?php echo $page-1; ?>" class="btn btn--nodef back"><span class="i-angle"></span></a>
+                            <a href="allitems.php?page=<?php echo $page-1; echo $s; ?>" class="btn btn--nodef back"><span class="i-angle"></span></a>
                             <?php endif; ?>
-                            <?php for($i = 1; $i < ($members/9)+1; $i++) : ?>
-                            <a href="allitems.php?page=<?php echo $i; ?>" class="btn btn--nodef navlink <?php if($i == $page) echo 'current' ?>"><?php echo $i; ?></a>
+                            <?php for($i = 1; $i <= ceil(count($items_src)/($max)); $i++) : ?>
+                            <a href="allitems.php?page=<?php echo $i; echo $s; ?>" class="btn btn--nodef navlink <?php if($i == $page) echo 'current' ?>"><?php echo $i; ?></a>
                             <?php endfor; ?>
-                            <?php if($page != ($members/2+1)) : ?>
-                            <a href="allitems.php?page=<?php echo $page+1; ?>" class="btn btn--nodef forw"><span class="i-angle"></span></a>
+                            <?php if( $page != ceil(count($items_src)/($max)) ) : ?>
+                            <a href="allitems.php?page=<?php echo $page+1; echo $s; ?>" class="btn btn--nodef forw"><span class="i-angle"></span></a>
                             <?php endif; ?>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="right--coll">
+                <section class="section" id="searchall">
+                    <div class="section__inner">
+                        <div class="searchall siteblock">
+                            <div class="content">
+                                <?php  
+                                    if($_GET['search']) {
+                                        $search_val = $_GET['search'];
+                                    }
+                                ?>
+                                <div class="inp"><input type="search" name="" id="" class="input-text" oninput="searchall()" value="<?php echo $search_val;?>"><a href=""><span class="i-search"></span></a></div>
+                                <div class="catygories--block">
+                                    <?php 
+                                        $query = $connect->prepare("SELECT * FROM `sys_catygories` LIMIT 8");
+                                        $query->execute();
+                                        $cats = $query->fetchAll();
+                                        foreach($cats as $key) :
+                                    ?>
+                                    <a href="allitems.php?category=<?php echo $key['name']; ?>" class="btn btn--cat"><?php echo $key['name']; ?><span class="i-angle"></span></a>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>

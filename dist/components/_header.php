@@ -14,8 +14,28 @@
 
             <div class="buttons">
                 <div class="norifyis__btns">
-                    <a class="btn" id="modak-tog" data-modal="mdl-notify"><span class="i-notify"></span></a>
-                    <a class="btn"><span class="i-search"></span></a>
+                    <a class="btn" id="modak-tog" data--toggle-modal="mdl-notify" onclick="modal(this)"><span class="i-notify"></span></a>
+                    <a class="btn" data--toggle-modal="mdl-search"><span class="i-search" ></span></a>
+
+                    <div class="headers__modals">
+                        <div class="modal siteblock" data--modal="mdl-notify">
+                            <div class="item">
+                                <h4 class="name">Заявка №17</h4>
+                                <div class="text">Статус заявки №17 изменился на <span data--status="true">Выполнена</span></div>
+                                <a href="" class="btn btn--def ">Посмотреть</a>
+                            </div>
+                            <div class="item">
+                                <h4 class="name">Заявка №17</h4>
+                                <div class="text">Статус заявки №17 изменился на <span data--status="true">Выполнена</span></div>
+                                <a href="" class="btn btn--def ">Посмотреть</a>
+                            </div>
+                            <div class="item">
+                                <h4 class="name">Заявка №17</h4>
+                                <div class="text">Статус заявки №17 изменился на <span data--status="true">Выполнена</span></div>
+                                <a href="" class="btn btn--def ">Посмотреть</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <?php if($user_info) : ?>
                     <a href="profile.php" class="u_image"><?php echo $user_info['u_name']; ?>  <img src="<?php echo $user_info['image']; ?>" alt=""></a>
@@ -23,6 +43,8 @@
                     <a href="login.php" class="btn btn--toSingInPage">Войти</a>
                 <?php endif; ?>
             </div>
+
+            
         </div>
     </div>
 </header>

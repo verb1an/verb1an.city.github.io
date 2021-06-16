@@ -137,8 +137,7 @@ function register() {
 }
 function login() {
     let obj = {
-        login: document.querySelector(`input[name='linp--login']`)
-            .value,
+        login: document.querySelector(`input[name='linp--login']`).value,
         pass: document.querySelector(`input[name='linp--pass']`).value,
     };
     if (obj.login.length > 0 && obj.pass.length > 0) {
@@ -243,7 +242,6 @@ function uploadFile(input) {
 }
 
 function itemUpload(itemsimagesinput) {
-    let inputfile = document.querySelector('.inp.file input');
     let preview = document.querySelector(".imgpreviews");
     itemsimagesinput.addEventListener("change", function () {
         if (
@@ -255,10 +253,7 @@ function itemUpload(itemsimagesinput) {
                     let fd = new FormData();
                     fd.append("img", $(itemsimagesinput).prop("files")[i]);
                     upload(fd);
-                    
                 }
-
-                console.log( itemsimagesinput.files.length )
             }
         }
     });
@@ -274,7 +269,6 @@ function itemUpload(itemsimagesinput) {
                 if (data !== "false") {
                     preview.innerHTML += `<div class="img"><img src="${data}" alt=""><a class="del"></a></div>`;
                     newLstnr();
-                    console.log( inputfile.value )
                 }
             },
         });
@@ -298,7 +292,7 @@ function itemUpload(itemsimagesinput) {
         });
     }
 
-    if( document.querySelectorAll(".img .del")) {
+    if (document.querySelectorAll(".img .del")) {
         newLstnr();
     }
 }
@@ -311,7 +305,14 @@ function addNewItem(form) {
         images: "",
         cats: "",
         show_name: document.querySelector("#itemtab .checkbox input").checked,
-        date: date.getFullYear() + '-' + ( date.getMonth() < 10 ? '0' + (date.getMonth()+1) : (date.getMonth()+1) ) + '-' +  ( date.getDate() < 10 ? '0' + date.getDate() : date.getDate() ),
+        date:
+            date.getFullYear() +
+            "-" +
+            (date.getMonth() < 10
+                ? "0" + (date.getMonth() + 1)
+                : date.getMonth() + 1) +
+            "-" +
+            (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()),
     };
     document.querySelectorAll(".imgpreviews .img img").forEach((el) => {
         item.images += el.getAttribute("src") + ";";
@@ -327,7 +328,7 @@ function addNewItem(form) {
         }
     }
 
-    if (cond && form == 'add') {
+    if (cond && form == "add") {
         $.ajax({
             url: "server/itemsrc.php",
             data: "newpost=" + JSON.stringify(item),
@@ -348,14 +349,13 @@ function addNewItem(form) {
         });
     }
 
-    if(cond && form == 'edit') {
-        let itemid = ( window.location.search.split('=')[1] )
+    if (cond && form == "edit") {
+        let itemid = window.location.search.split("=")[1];
         $.ajax({
             url: "server/itemsrc.php",
-            data: "editpost=" + JSON.stringify(item) + "&item=" + itemid ,
+            data: "editpost=" + JSON.stringify(item) + "&item=" + itemid,
             type: "POST",
             success: function (data) {
-                console.log(data)
                 if (data == "true") {
                     message({
                         target: "message",
@@ -364,7 +364,7 @@ function addNewItem(form) {
                     });
                     setTimeout(() => {
                         document.location.href = "viewitem.php?id=" + itemid;
-                    }, 1000)
+                    }, 1000);
                 }
             },
         });
@@ -392,7 +392,7 @@ function clearInputs() {
 function disItem() {
     message({
         target: 'message',
-        type:  'success',
+        type:  'confirm',
         text: 'Удалить заявку? Вышу заявку сможет восстановить только администратор<br><div class="buttons"><a class="btn btn--def confdel" onclick="del()">Удалить</a><a class="back" onclick="window.location.reload()">Отмена</a></div>'
     });
 }
@@ -420,6 +420,7 @@ function del() {
 }
 
 function editStatus(item) {
+    console.log('1123')
     let itemid = ( window.location.search.replace('?', '').split('=')[1] );
     $.ajax({
         url: 'server/itemsrc.php',
@@ -430,6 +431,20 @@ function editStatus(item) {
                 window.location.reload();
             }
         }
+    })
+}
+
+function setNotify() {
+
+}
+
+function getNotify() {
+    
+}
+
+function readNotify() {
+    $.ajax({
+
     })
 }
 
@@ -532,18 +547,29 @@ const defaultSlider = (sett) => {
     }
 };
 
+function searchall() {
+    let value = document.querySelector('#searchall .inp input').value;
+    document.querySelector('#searchall .inp a').setAttribute('href', `allitems.php?search=${value}`);
+}
+
+function modal(toggle) {
+    let mod = document.querySelector(`.modal[data--modal="${toggle.getAttribute('data--toggle-modal')}"]`);
+    mod.classList.toggle('show');
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     dopPsevdoUi();
     setValidation();
+    getNotify();
 
     let imageinput = document.querySelector("#edit--image");
-    let menu_items = document.querySelectorAll('.nav .link');
+    let menu_items = document.querySelectorAll(".nav .link");
     let additemimg = document.querySelector('#additemimg');
 
     if( additemimg ) {
         itemUpload(additemimg);
     }
-    
+
     if (imageinput) {
         let preview = document.querySelector("#imgprev");
         imageinput.addEventListener("change", function (evt) {
@@ -556,25 +582,40 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     menu_items.forEach((el) => {
-        
-        el.addEventListener('click', function() {
-            menu_items.forEach((leave) => {leave.classList.remove('current');})
-            el.classList.add('current');
+        el.addEventListener("click", function () {
+            menu_items.forEach((leave) => {
+                leave.classList.remove("current");
+            });
+            el.classList.add("current");
         });
 
-        el.classList.remove('current');
-        let pathname = window.location.pathname.split('/');
-        if(pathname[pathname.length-1] == el.getAttribute('href')) {
-            el.classList.add('current');
+        el.classList.remove("current");
+        let pathname = window.location.pathname.split("/");
+        if (pathname[pathname.length - 1] == el.getAttribute("href")) {
+            el.classList.add("current");
         }
 
-        if(el.getAttribute('data--pathnames-current') != null) {
-            let pn = el.getAttribute('data--pathnames-current').split(';').forEach((path) => {
-                if(pathname[pathname.length-1] == path) {
-                    el.classList.add('current');
-                }
-            })
+        if (el.getAttribute("data--pathnames-current") != null) {
+            let pn = el
+                .getAttribute("data--pathnames-current")
+                .split(";")
+                .forEach((path) => {
+                    if (pathname[pathname.length - 1] == path) {
+                        el.classList.add("current");
+                    }
+                });
         }
     });
 
+    document.addEventListener('click', function(e) {
+        let mods = document.querySelectorAll('.modal.show')
+        if( mods.length > 0 ) {
+
+            if( !e.target.closest('.modal') && !e.target.closest('a[data--toggle-modal]') ) {
+                mods.forEach((el) => {
+                    el.classList.remove('show');
+                })
+            }
+        }
+    })
 });

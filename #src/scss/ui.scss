@@ -30,7 +30,12 @@ a {
             }
         }
 
-        &.link--under {
+        &.link--nodef {
+            color: $green-color;
+
+            &:hover{
+                color: $dark3-color;
+            }
         }
 
         &.link--fill {
@@ -391,7 +396,7 @@ a {
     position: fixed;
     top: 0;
     right: 0;
-    margin: 20px;
+    margin: 80px 20px;
 
     display: flex;
     flex-direction: column;
@@ -444,13 +449,13 @@ a {
         }
 
         &[data-message-type="success"] {
-            background-color: rgba(57, 218, 118, 0.7);
-            color: #fff;
+            background-color: $grn7-color;
+            color: $white-color;
 
             .btn--popap-close {
                 &:before,
                 &:after {
-                    background-color: #fff;
+                    background-color: $white-color;
                 }
             }
         }
@@ -462,6 +467,18 @@ a {
                 &:before,
                 &:after {
                     background-color: #333;
+                }
+            }
+        }
+
+        &[data-message-type="confirm"] {
+            background-color: $white-color;
+            color: $dark1-color;
+
+            .btn--popap-close {
+                &:before,
+                &:after {
+                    background-color: $dark1-color;
                 }
             }
         }

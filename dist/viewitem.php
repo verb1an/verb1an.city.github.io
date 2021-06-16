@@ -107,7 +107,7 @@ if($_GET['id']) {
                                     <?php if($user_info['rights'] == 'super') : ?>
                                     <a class="link btn--changeStatus">Статус:
                                         <div class="checkbox">
-                                            <input type="checkbox" name="" <?php if($item_src['status'] == 'true') { echo 'checked="checked"'; } ?> id="changestatus">
+                                            <input type="checkbox" name="" <?php if($item_src['status'] == 'true') { echo 'checked="checked"'; } ?> id="changestatus" onclick="editStatus(this)">
                                             <label for="changestatus"></label>
                                         </div>
                                     </a>

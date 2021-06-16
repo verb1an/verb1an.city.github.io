@@ -68,7 +68,7 @@ if( isset($_GET['edit']) && !empty($_GET['edit'])) {
                                         <textarea name="item_text" class="input-text" placeholder="Краткое писание проблемы"><?php echo $item_src['text']; ?></textarea>
                                     </div>
                                     <div class="inp file">
-                                        <input type="file" name="" id="itemsfiles" multiple>
+                                        <input type="file" name="" id="additemimg" multiple>
                                         <span>Максимум 10 фото</span>
                                     </div>
                                     <div class="imgpreviews">

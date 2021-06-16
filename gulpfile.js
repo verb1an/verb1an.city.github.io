@@ -141,17 +141,15 @@ function lib() {
 }
 
 function watchFiles() {
-	gulp.watch([path.watch.html], html);
 	gulp.watch([path.watch.css], css);
 	gulp.watch([path.watch.js], js);
-	gulp.watch([path.watch.img], images);
 }
 
 function clean() {
-	return del(path.clean);
+	//return del(path.clean);
 }
 
-let build = gulp.series(clean, gulp.parallel(css, html, js, images, icons, lib));
+let build = gulp.series(clean, gulp.parallel(css, js, lib));
 let watch = gulp.parallel(build, watchFiles, browse);
 
 exports.build = build;
